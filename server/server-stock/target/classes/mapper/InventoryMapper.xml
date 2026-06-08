@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ism.stock.mapper.InventoryMapper">
+
+    <select id="selectInventoryWithDetails" resultType="map">
+        SELECT 
+            i.*, 
+            p.name as productName, 
+            p.code as productCode, 
+            p.spec as productSpec, 
+            p.unit,
+            w.name as warehouseName, 
+            p.safety_stock as safetyStock, 
+            p.max_stock as maxStock
+        FROM stock_inventory i
+        JOIN base_product p ON i.product_id = p.id
+        JOIN base_warehouse w ON i.warehouse_id = w.id
+        <where>
+            <if test="productId != null">AND i.product_id = #{productId}</if>
+            <if test="warehouseId != null">AND i.warehouse_id = #{warehouseId}</if>
+            <if test="keyword != null and keyword != ''">
+                AND (p.name LIKE CONCAT('%', #{keyword}, '%') OR p.code LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY i.update_time DESC
+    </select>
+
+    <select id="selectInventoryPage" resultType="map">
+        SELECT 
+            i.id,
+            i.product_id as productId,
+            i.warehouse_id as warehouseId,
+            i.zone_id as zoneId,
+            i.batch_no as batchNo,
+            i.quantity,
+            i.locked_quantity as lockedQuantity,
+            i.production_date as productionDate,
+            i.expiry_date as expiryDate,
+            i.version,
+            i.create_time as createTime,
+            i.update_time as updateTime,
+            p.name as productName, 
+            p.code as productCode, 
+            p.spec as productSpec, 
+            p.unit,
+            w.name as warehouseName, 
+            p.safety_stock as safetyStock, 
+            p.max_stock as maxStock
+        FROM stock_inventory i
+        JOIN base_product p ON i.product_id = p.id
+        JOIN base_warehouse w ON i.warehouse_id = w.id
+        <where>
+            <if test="productId != null">AND i.product_id = #{productId}</if>
+            <if test="warehouseId != null">AND i.warehouse_id = #{warehouseId}</if>
+            <if test="keyword != null and keyword != ''">
+                AND (p.name LIKE CONCAT('%', #{keyword}, '%') OR p.code LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY i.update_time DESC
+    </select>
+
+</mapper>
