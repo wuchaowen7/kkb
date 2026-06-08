@@ -1,0 +1,6 @@
+com\ism\report\mapper\ReportMapper.class
+com\ism\report\ReportApplication.class
+com\ism\report\service\ReportService.class
+com\ism\report\controller\ReportController.class
+com\ism\report\service\impl\ReportServiceImpl.class
+com\ism\report\entity\InventoryDetailModel.class
