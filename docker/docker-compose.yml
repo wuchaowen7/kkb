@@ -1,0 +1,129 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ism-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: smart_inventory
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    container_name: ism-redis
+    ports:
+      - "6379:6379"
+    restart: always
+
+  server-gateway:
+    build:
+      context: ../server
+      dockerfile: ../docker/server/Dockerfile
+      target: gateway
+    container_name: ism-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    restart: always
+
+  server-system:
+    build:
+      context: ../server
+      dockerfile: ../docker/server/Dockerfile
+      target: system
+    container_name: ism-system
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql
+      - redis
+    restart: always
+
+  server-base:
+    build:
+      context: ../server
+      dockerfile: ../docker/server/Dockerfile
+      target: base
+    container_name: ism-base
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysql
+      - redis
+    restart: always
+
+  server-stock:
+    build:
+      context: ../server
+      dockerfile: ../docker/server/Dockerfile
+      target: stock
+    container_name: ism-stock
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mysql
+      - redis
+    restart: always
+
+  server-intelligence:
+    build:
+      context: ../server
+      dockerfile: ../docker/server/Dockerfile
+      target: intelligence
+    container_name: ism-intelligence
+    ports:
+      - "8084:8084"
+    depends_on:
+      - mysql
+      - redis
+    restart: always
+
+  server-report:
+    build:
+      context: ../server
+      dockerfile: ../docker/server/Dockerfile
+      target: report
+    container_name: ism-report
+    ports:
+      - "8085:8085"
+    depends_on:
+      - mysql
+    restart: always
+
+  ai-service:
+    build:
+      context: ../ai-service
+      dockerfile: ../docker/ai/Dockerfile
+    container_name: ism-ai
+    ports:
+      - "5000:5000"
+    environment:
+      BACKEND_URL: http://server-intelligence:8084/api
+    restart: always
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: ism-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ../web/dist:/usr/share/nginx/html
+    depends_on:
+      - server-gateway
+    restart: always
+
+volumes:
+  mysql_data:
