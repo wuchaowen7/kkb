@@ -1,0 +1,17 @@
+com\ism\base\BaseApplication.class
+com\ism\base\service\ProductService.class
+com\ism\base\mapper\ProductMapper.class
+com\ism\base\mapper\WarehouseMapper.class
+com\ism\base\service\CategoryService.class
+com\ism\base\service\WarehouseService.class
+com\ism\base\service\impl\ProductServiceImpl.class
+com\ism\base\controller\ProductController.class
+com\ism\base\service\impl\WarehouseServiceImpl.class
+com\ism\base\controller\WarehouseController.class
+com\ism\base\service\impl\CategoryServiceImpl.class
+com\ism\base\service\impl\SupplierServiceImpl.class
+com\ism\base\mapper\SupplierMapper.class
+com\ism\base\controller\CategoryController.class
+com\ism\base\controller\SupplierController.class
+com\ism\base\mapper\CategoryMapper.class
+com\ism\base\service\SupplierService.class
