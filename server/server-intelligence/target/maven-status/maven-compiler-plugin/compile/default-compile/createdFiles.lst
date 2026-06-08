@@ -1,0 +1,6 @@
+com\ism\intelligence\controller\AlertController.class
+com\ism\intelligence\mapper\AlertMapper.class
+com\ism\intelligence\IntelligenceApplication.class
+com\ism\intelligence\service\impl\AlertServiceImpl.class
+com\ism\intelligence\service\AlertService.class
+com\ism\intelligence\mapper\AnalysisMapper.class

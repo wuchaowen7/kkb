@@ -1,0 +1,52 @@
+server:
+  port: 8080
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: server-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-name: true
+      routes:
+        - id: system-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/auth/**, /api/system/**
+          filters:
+            - StripPrefix=0
+        - id: base-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/base/**
+          filters:
+            - StripPrefix=0
+        - id: stock-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/stock/**
+          filters:
+            - StripPrefix=0
+        - id: intelligence-service
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/intelligence/**
+          filters:
+            - StripPrefix=0
+        - id: report-service
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/report/**
+          filters:
+            - StripPrefix=0
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
